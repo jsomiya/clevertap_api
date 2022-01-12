@@ -1,7 +1,6 @@
 import json
 import requests
 from flask import Flask, request
-from IPython import embed
 
 from db import POSTGRES, db
 from models import Querylist
@@ -25,7 +24,6 @@ def getquery():
     numbers = request_data['numbers']
     no_of_users = len(numbers)
     template_id = request_data['template_id']
-    embed()
     query_data = Querylist.query.get_or_404(template_id)
     sql = query_data.query_text
     for i in range(0,no_of_users):
