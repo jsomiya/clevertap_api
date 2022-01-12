@@ -1,7 +1,7 @@
 import json
 import requests
 from flask import Flask, request
-
+from IPython import embed
 
 from db import POSTGRES, db
 from models import Querylist
@@ -14,21 +14,26 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhos
 
 db.init_app(app)
 
+@app.route("/test")
+def test():
+    return "done"
+
 @app.route('/postqueryresponse', methods=['POST'])
 def getquery():
     url = "citymall.dev"
     request_data = request.get_json()
-    user_phone = request_data['user_phone']
-    no_of_users = len(user_phone)
+    numbers = request_data['numbers']
+    no_of_users = len(numbers)
     template_id = request_data['template_id']
+    embed()
     query_data = Querylist.query.get_or_404(template_id)
     sql = query_data.query_text
     for i in range(0,no_of_users):
-        result = db.session.execute(sql, {'val':user_phone[i]})
+        result = db.session.execute(sql, {'val':numbers[i]})
         res = result.one_or_none()
         parameters = list(res)
         data = {
-            "numbers": user_phone,
+            "numbers": numbers,
             "template_id": template_id,
             "parameters":parameters
         }
