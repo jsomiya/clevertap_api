@@ -13,9 +13,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhos
 
 db.init_app(app)
 
-@app.route("/test")
-def test():
-    return "done"
 
 @app.route('/postqueryresponse', methods=['POST'])
 def getquery():
