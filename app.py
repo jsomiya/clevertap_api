@@ -42,7 +42,6 @@ def getquery():
                 "template_id": template_id,
                 "parameters":parameters
                 }
-            print(data)
             response  = requests.post(url+'//api/ct/webhook',data=json.dumps(data))
             return response.status_code  
     except Exception as err:
