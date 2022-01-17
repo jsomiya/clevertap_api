@@ -1,12 +1,19 @@
 import json, requests
+from re import template
 from flask import Flask, request
 
 from sqlalchemy import text
-from querydict import query_dict
+from querydict import q_template, query_dict
 from config import url
 from db import connection
 
 app = Flask(__name__)
+
+#send alerts on slack
+def sendSlackMessage(message):
+    payload = '{"text":"%s"}' % message
+    response = requests.post('https://hooks.slack.com/services/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', data=payload)
+    print(response.status_code)
 
 
 @app.route('/postqueryresponse', methods=['POST'])
@@ -14,25 +21,29 @@ def getquery():
     try:
         request_data = request.get_json()
         numbers = request_data['numbers']
-        no_of_users = len(numbers)
         template_id = request_data['template_id']
-        for q in query_dict:
-            if q["template_id"]==template_id:
-                sql = q["query_text"]
+        no_of_users = len(numbers)
+        if template_id in q_template:
+            for key,value in query_dict.items():
+                if key==template_id:
+                    sql = value
+        else:
+            sendSlackMessage("The webhook sent invalid template_id")
         for i in range(0,no_of_users):
             sql_query = text(sql)
-            result = connection.execute(sql_query, val = numbers[i])
-            res = result.one_or_none()
+            result = connection.execute(sql_query, val = template_id)
+            try:
+                res = result.one()
+            except:
+                sendSlackMessage("The query returned none or too many data at once")
             parameters = list(res)
             data = {
-                "numbers": numbers,
+                "numbers": [numbers[i]],
                 "template_id": template_id,
                 "parameters":parameters
-            }
+                }
+            print(data)
             response  = requests.post(url+'//api/ct/webhook',data=json.dumps(data))
-        return response.status_code
-    except:
-        return 'success', 200
-
-        
-
+            return response.status_code  
+    except Exception as err:
+        sendSlackMessage(err)

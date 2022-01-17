@@ -13,5 +13,3 @@ POSTGRES = {
 engine = create_engine('postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES)
 # engine = create_engine('postgresql://postgres:password@localhost/test')
 connection = engine.connect()
-
-db = SQLAlchemy()
