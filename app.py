@@ -1,19 +1,14 @@
-import json, requests
-from re import template
+import json, requests, sys
+from sqlalchemy import text
 from flask import Flask, request
 
-from sqlalchemy import text
 from querydict import q_template, query_dict
-from config import url
+from slackalert import sendSlackMessage
 from db import connection
+from config import url
+
 
 app = Flask(__name__)
-
-#send alerts on slack
-def sendSlackMessage(message):
-    payload = '{"text":"%s"}' % message
-    response = requests.post('https://hooks.slack.com/services/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', data=payload)
-    print(response.status_code)
 
 
 @app.route('/postqueryresponse', methods=['POST'])
@@ -45,4 +40,4 @@ def getquery():
             response  = requests.post(url+'//api/ct/webhook',data=json.dumps(data))
             return response.status_code  
     except Exception as err:
-        sendSlackMessage(err)
+        sendSlackMessage(sys.exc_info()[0], err)
