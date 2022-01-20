@@ -10,7 +10,7 @@ query_dict = [
     },
     {
     "template_id" : "s03",
-    "query_text" : "select * from orders where user_phone = :val"
+    "query_text" : "select user_name from tbl_user where user_phone = :val"
     },
     {
     "template_id" : "s04",
