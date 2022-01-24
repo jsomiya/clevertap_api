@@ -8,6 +8,7 @@ from querydict import query_dict
 from slackalert import sendSlackMessage
 from db import connection
 from config import url
+from config import headers
 
 
 app = Flask(__name__)
@@ -29,11 +30,8 @@ def sendparams():
             "template_id": template_id,
             "parameters":params
             }
-            headers = {
-                'x-ct-key': 'AkbMw8wTBL/tq/KYPuvOPsyIpz3xP+h2lZRsSECvc24=',
-                'Content-Type': 'application/json',
-            }
             response  = requests.post(url+'/api/ct/webhook', headers=headers, data=json.dumps(data))
+            return 'OK'
     except:
         return 'success' , 200
 
@@ -65,10 +63,6 @@ def getquery():
                     "numbers": [numbers[i]],
                     "template_id": template_id,
                     "parameters":params[0]
-                }
-                headers = {
-                'x-ct-key': 'AkbMw8wTBL/tq/KYPuvOPsyIpz3xP+h2lZRsSECvc24=',
-                'Content-Type': 'application/json',
                 }
                 response  = requests.post(url+'/api/ct/webhook', headers=headers, data=json.dumps(data))
                 return 'OK'
