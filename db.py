@@ -1,11 +1,12 @@
+import os
 from sqlalchemy import create_engine
 
 POSTGRES = {
-    'user': 'cm',
-    'pw': 'cm',
-    'host': '13.232.92.91',  # 'cmdb-rr2.cbo3ijdmzhje.ap-south-1.rds.amazonaws.com',
-    'port': '5432',
-    'db' : 'cmdb'
+    'user': os.environ.get('DBUSER', 'cm'),
+    'pw': os.environ.get('DBPASS', 'cm'),
+    'host': os.environ.get('DBURL', '13.232.92.91'), 
+    'port': os.environ.get('PORT', '5432'), 
+    'db' : os.environ.get('DB', 'cmdb'),
 }
 
 

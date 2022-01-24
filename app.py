@@ -36,7 +36,7 @@ def sendparams():
         return 'success' , 200
 
 
-@app.route('/ct/qeury/message', methods=['POST'])
+@app.route('/ct/query/message', methods=['POST'])
 def getquery():
     try:
         request_data = request.get_json()
@@ -70,3 +70,7 @@ def getquery():
                 sendSlackMessage("The query returned none or too many data at once")
     except Exception:
         return sendSlackMessage(sys.argv()[0])
+
+
+if __name__ == "__main__":
+    app.run()

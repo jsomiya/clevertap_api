@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  flask:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: flask_whatsapp
+    restart: always
+    env_file:
+      - .envs
+    command: ["gunicorn", "app:app", "-b", "0.0.0.0:5000"]
+    ports:
+      - "5001:5000"
